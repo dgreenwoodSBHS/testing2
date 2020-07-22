@@ -1,0 +1,118 @@
+<!doctype html>
+
+<body>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <script src="player.js"></script>
+    <script src="map.js"></script>
+    <script>
+        var canvas, canvasContext;
+
+        window.onload = function() {
+            canvas = document.getElementById('gameCanvas');
+            canvasContext = canvas.getContext('2d');
+
+            document.addEventListener('keydown', keyPressed);
+            document.addEventListener('keyup', keyReleased);
+
+            makeDungeon();
+
+            setInterval(mainloop, 1000 / 50);
+        }
+
+        const LEFT_KEY = 37;
+        const RIGHT_KEY = 39;
+        const UP_KEY = 38;
+        const DOWN_KEY = 40;
+        var leftKey = false;
+        var rightKey = false;
+        var upKey = false;
+        var downKey = false;
+
+        var mapImg = new Image();
+        mapImg.src = 'images/map.jpg';
+
+        var dungeonImgsXY = [];
+        var dungeonImgTotal = 25;
+        const DUNGEON_IMG_ROWS = 5
+        var dungeonColCount = 0;
+        var dungeonRowCount = 0;
+        var dungeonImgNum = 0;
+        var dungeonImgCount = 0;
+
+        const DUNGEON_IMG_WIDTH = 42;
+        const DUNGEON_IMG_HEIGHT = 43;
+        const GRID_SIZE = 40;
+
+        var dungeonImgsArray = [];
+
+        var arrayMap = [
+            16, 1, 1, 1, 1, 1, 1, 1, 1, 17,
+            10, 6, 6, 6, 6, 6, 6, 6, 6, 11,
+            10, 15, 15, 15, 15, 15, 15, 15, 15, 11,
+            19, 18, 18, 7, 15, 15, 15, 15, 15, 11,
+            10, 6, 6, 6, 15, 15, 15, 15, 15, 11,
+            10, 15, 15, 15, 15, 23, 18, 18, 18, 22,
+            10, 15, 15, 15, 15, 6, 6, 6, 6, 11,
+            10, 15, 24, 15, 15, 15, 15, 15, 15, 11,
+            10, 15, 15, 15, 15, 15, 15, 15, 15, 11,
+            20, 2, 2, 2, 2, 2, 2, 2, 2, 21
+        ];
+
+        var startingPos = true;
+
+        function mainloop() {
+            colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
+
+            if (dungeonImgsArray.length > 0) {
+                dungeonImgsArray.forEach(function(img, i) {
+                    img.drawMapImg();
+                });
+            }
+            if (startingPos) {
+                player.startPos();
+            }
+
+            player.drawImg();
+            player.move();
+            player.hasCollided();
+        }
+
+
+        function keyPressed(evt) {
+            if (evt.keyCode == LEFT_KEY) {
+                leftKey = true;
+            }
+            if (evt.keyCode == RIGHT_KEY) {
+                rightKey = true;
+            }
+            if (evt.keyCode == UP_KEY) {
+                upKey = true;
+            }
+            if (evt.keyCode == DOWN_KEY) {
+                downKey = true;
+            }
+        }
+
+        function keyReleased(evt) {
+            if (evt.keyCode == LEFT_KEY) {
+                leftKey = false;
+            }
+            if (evt.keyCode == RIGHT_KEY) {
+                rightKey = false;
+            }
+            if (evt.keyCode == UP_KEY) {
+                upKey = false;
+            }
+            if (evt.keyCode == DOWN_KEY) {
+                downKey = false;
+            }
+        }
+
+        function colorRect(x, y, w, h, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.fillRect(x, y, w, h);
+        }
+
+    </script>
+    <script src="dungeon.js"></script>
+</body>
